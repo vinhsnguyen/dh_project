@@ -1,0 +1,3071 @@
+:: StoryTitle
+DH_Project
+
+
+:: StoryData
+{
+  "ifid": "E167B193-8E6B-4147-ACD9-751E2E54C50C",
+  "format": "SugarCube",
+  "format-version": "2.36.1",
+  "start": "home",
+  "tag-colors": {
+    "blue": "blue",
+    "black": "purple",
+    "green": "green",
+    "red": "red",
+    "dead": "orange",
+    "home": "yellow",
+    "end": "orange",
+    "path_end": "red"
+  },
+  "zoom": 0.6
+}
+
+
+:: PassageHeader {"position":"3175,800","size":"100,100"}
+<<if passage() isnot "home" && passage() isnot "plague">>
+$health <img src="assets\start\love_Dwi_ridwanto_flaticon.png" data-passage="icon">
+$coins <img src="assets\start\coin_GibuStudio_flaticon.png" class="icon" data-passage="icon">
+Inventory: <<for _i to 0; _i lt $inventory.length; _i++>>  <<nobr>>
+<<if _i gt 0>>
+,
+<</if>>
+<<print $item_list[$inventory[_i]].name >>
+<</nobr>>
+<</for>>
+<br>
+<</if>>
+<<nobr>>
+<<if $health <= 0 && passage() is not "dead">>
+	<<goto dead>>
+<</if>>
+<</nobr>>
+
+
+:: Small Pouch of Gold [home] {"position":"3650,1425","size":"100,100"}
+*img and description
+
+[[Get ready to set off|crossroad]]
+
+<<set $coins=$coins+20>>
+
+
+
+:: bear [green] {"position":"1850,1425","size":"100,100"}
+Along your trek, you begin to hear heavy footsteps in the woods, then tired huffing. You turn to find its source when you see a bear coming your way.
+
+Its breathing is heavy and it has fresh wounds across its body, as if it had just escaped a more dangerous predator. 
+
+In its spooked frenzy, it comes charging at you.
+
+<img src="assets\greenpath\daynight\bear\Monstrous-Rage-Wilds-of-Eldraine-MtG-Art.jpg">
+
+<<if $forest_night is true>>
+    [[Prepare to fight...|bear_assist]]
+<<else>>
+
+<<set $enemy_health = 10>>
+The bear has $enemy_health health.
+
+<<for _i to 0; _i lt $inventory.length; _i++>>  <<nobr>>
+	<<switch $item_list[$inventory[_i]].type>>
+    	<<case "sharp">>
+        	<<link `"Slash with your " + $item_list[$inventory[_i]].name` "bear_slash">>
+            <</link>>
+        <<case "blunt">>
+        	<<link `"Slash with your " + $item_list[$inventory[_i]].name` "bear_bash">>
+            <</link>>
+        <<case "ranged">>
+        	<<link `"Slash with your " + $item_list[$inventory[_i]].name` "bear_shoot">>
+            <</link>>
+        <<case "defense">>
+        	<<link `"Block it with your " + $item_list[$inventory[_i]].name + " as you run away"` "bear_bash">>
+            <</link>>
+        <<case "special">>
+        	
+        <<default>>
+        	
+    <</switch>>
+    <</nobr>>
+<</for>>
+
+<</if>>
+
+<<if false>>
+[[bear_slash]]
+[[bear_bash]]
+[[bear_shoot]]
+[[bear_block]]
+<</if>>
+
+
+:: bear_assist [green] {"position":"1975,1050","size":"100,100"}
+Before it reaches you, something else comes bounding through the woods.
+
+A blur of fur and fangs lunges at the bear. The two struggle for a moment, before the bear's throat is clawed out by this newcomer.
+
+<img src="assets\greenpath\daynight\bear\wolfir_silverheart.jpg">
+
+[[Continue|bear_wolf]]
+
+
+:: bear_bash [green] {"position":"1625,1150","size":"100,100"}
+*Describe damage
+
+<<for _i to 0; _i lt $inventory.length; _i++>>  <<nobr>>
+	<<if $item_list[$inventory[_i]].type == "blunt" >>
+    	<<set $damage = $item_list[$inventory[_i]].power * 3>>
+    <</if>>
+    <</nobr>>
+<</for>>
+
+<<set $enemy_health = $enemy_health - $damage>>
+Bear takes $damage damage. It now has $enemy_health health.
+<<set $damage = 15 + $defense>>
+<<set $health = $health - $damage>>
+You take $damage damage.
+
+<<if $enemy_health < 1>>
+	[[Continue|wolf_trapped]]
+<<else>>
+	[[Continue|bear_fight]]
+<</if>>
+
+
+:: bear_block [green] {"position":"1725,1550","size":"100,100"}
+<<set $damage = 10 + $defense>>
+<<set $health = $health - $damage>>
+You take $damage damage trying to defend against the bear.
+
+The bear is faster than you expected. It doesn't seem like you'll be able to escape it.
+
+[[Continue|bear_fight]] 
+
+
+
+:: bear_fight [green] {"position":"1825,1125","size":"100,100"}
+The bear is still alive and ferociously attacking you.
+
+The bear has $enemy_health health.
+
+<<for _i to 0; _i lt $inventory.length; _i++>>  <<nobr>>
+	<<switch $item_list[$inventory[_i]].type>>
+    	<<case "sharp">>
+        	<<link `"Slash with your " + $item_list[$inventory[_i]].name` "bear_slash">>
+            <</link>>
+        <<case "blunt">>
+        	<<link `"Slash with your " + $item_list[$inventory[_i]].name` "bear_bash">>
+            <</link>>
+        <<case "ranged">>
+        	<<link `"Slash with your " + $item_list[$inventory[_i]].name` "bear_shoot">>
+            <</link>>
+        <<case "special">>
+        	
+        <<default>>
+        	
+    <</switch>>
+    <</nobr>>
+<</for>>
+
+<</if>>
+
+<<if false>>
+[[bear_slash]]
+[[bear_bash]]
+[[bear_shoot]]
+<</if>>
+
+
+:: bear_shoot [green] {"position":"1625,1275","size":"100,100"}
+*Describe damage
+
+<<for _i to 0; _i lt $inventory.length; _i++>>  <<nobr>>
+	<<if $item_list[$inventory[_i]].type == "ranged" >>
+    	<<set $damage = $item_list[$inventory[_i]].power * 5>>
+    <</if>>
+    <</nobr>>
+<</for>>
+
+<<set $enemy_health = $enemy_health - $damage>>
+Bear takes $damage damage. It now has $enemy_health health.
+<<set $damage = 15 + $defense>>
+<<set $health = $health - $damage>>
+You take $damage damage.
+
+<<if $enemy_health < 1>>
+	[[Continue|wolf_trapped]]
+<<else>>
+	[[Continue|bear_fight]]
+<</if>>
+
+
+:: bear_slash [green] {"position":"1625,1025","size":"100,100"}
+*Describe damage
+
+<<for _i to 0; _i lt $inventory.length; _i++>>  <<nobr>>
+	<<if $item_list[$inventory[_i]].type == "sharp" >>
+    	<<set $damage = $item_list[$inventory[_i]].power * 4>>
+    <</if>>
+    <</nobr>>
+<</for>>
+
+<<set $enemy_health = $enemy_health - $damage>>
+Bear takes $damage damage. It now has $enemy_health health.
+<<set $damage = 15 + $defense>>
+<<set $health = $health - $damage>>
+You take $damage damage.
+
+<<if $enemy_health < 1>>
+	[[Continue|wolf_trapped]]
+<<else>>
+	[[Continue|bear_fight]]
+<</if>>
+
+
+
+:: bear_wolf [green] {"position":"1825,850","size":"100,100"}
+You stand in shock, you've only ever heard stories of them, but you're certain that the creature before you is a werewolf of legend.
+
+It stares at you.
+
+Before you can utter a word, it warns, "Go to sleep wanderer. Tonight is the festival."
+
+It bounds away, dragging its kill with it.
+
+[[Heed its warning and rest for the night|day_again]]
+[[Continue your trek through the dark|wolf_trapped]]
+
+
+:: butcher [black] {"position":"5050,1100","size":"100,100"}
+as you travel down the road u hear some rustling in the foliage behind you
+
+[[turn around|butcher_knockout]]
+
+
+:: butcher_awake [black] {"position":"5050,850","size":"100,100"}
+you back to consciousness to see a man chopping meat, but corpses everywhere
+
+he has his back turned, he didn't tie your hands together very well
+
+[[try to slip out of binds|butcher_struggle]]
+[[get up and try to leave while still tied|butcher_tied]]
+
+
+:: butcher_basement [black] {"position":"5325,800","size":"100,100"}
+there's a cleaver stuck in the table
+
+[[cut your binds|butcher_handsfree]]
+
+
+:: butcher_bedroom [black] {"position":"5325,925","size":"100,100"}
+no key, but there is a chest
+
+[[open it|butcher_chest]]
+
+
+:: butcher_cabinet [black] {"position":"5875,850","size":"100,100"}
+you find key, you hear him coming this way
+
+[[butcher_escape_choice]]
+
+
+:: butcher_chest [black] {"position":"5450,925","size":"100,100"}
+locked and need key from basement (will make separate passage)
+
+[[go|butcher_basement]]
+
+
+:: butcher_escap_echest [black] {"position":"6225,925","size":"100,100"}
+grab whatever
+
+[[Hurry to the exit|butcher_hurt_escape]]
+
+
+:: butcher_escape [black] {"position":"5900,650","size":"100,100"}
+u get tired
+
+see light through the trees
+
+[[exit the forest|mansion_start]]
+
+
+:: butcher_escape_choice [black] {"position":"6050,925","size":"100,100"}
+you run upstairs
+
+you can run to his room to open that chest, or get out now and be safe
+
+[[Run to the bedroom and open his chest|butcher_escap_echest]]
+[[Rush to unlock the door ASAP|butcher_escape_scram]]
+
+
+:: butcher_escape_scram [black] {"position":"6050,775","size":"100,100"}
+
+
+[[keep running|butcher_escape]]
+
+
+:: butcher_fridge [black] {"position":"5675,925","size":"100,100"}
+different animals limbs and innards packaged/hanging all around
+
+<<if not hasVisited("butcher_knife")>>
+	[[steal the butcher knife|butcher_grab_knife]]
+<</if>>
+
+<<if not hasVisited("butcher_cabinet")>>
+	[[search the cabinet|butcher_cabinet]]
+<</if>>
+
+
+:: butcher_grab_knife [black] {"position":"5675,675","size":"100,100"}
+adds knife to inventory
+
+hefty, but not well taken care of, dried blood on it
+
+what now?
+
+// check what's been done before
+
+<<if not hasVisited("butcher_fridge")>>
+	[[search the fridge|butcher_fridge]]
+<</if>>
+
+<<if not hasVisited("butcher_cabinet")>>
+	[[search the cabinet|butcher_cabinet]]
+<</if>>
+
+
+:: butcher_handsfree [black] {"position":"5475,750","size":"100,100"}
+you can hear he has stopped chopping his meat and is walking around upstairs, what to do
+
+[[steal the butcher knife|butcher_grab_knife]]
+[[search the cabinet|butcher_cabinet]]
+[[search the fridge|butcher_fridge]]
+
+
+:: butcher_hurt_escape [black] {"position":"6225,775","size":"100,100"}
+unlock the door in knick of time
+
+he slashes you as you out the door
+
+make it out
+
+[[keep running|butcher_escape]]
+
+
+:: butcher_knockout [black] {"position":"5050,975","size":"100,100"}
+as you look behind you, knocked out
+
+[[wake up|butcher_awake]]
+
+
+:: butcher_struggle [black] {"position":"5175,800","size":"100,100"}
+can't slip out of these binds
+
+[[get up|butcher_tied]]
+
+
+
+
+:: butcher_tied [black] {"position":"5175,925","size":"100,100"}
+you try to sneak out, door is locked
+
+rooms on either side of the door
+
+[[go bedroom|butcher_bedroom]]
+[[go down to basement|butcher_basement]]
+
+
+
+
+:: cavehorror [black] {"position":"4625,1275","size":"100,100"}
+the road continues through cavern
+
+something skulking
+
+[[turn light towards it|cavehorror_reveal]]
+[[ignore it and run|cavehorror_ambush]]
+
+
+:: cavehorror_ambush [black] {"position":"4750,1150","size":"100,100"}
+as soon as you start running, it bounds towards you and grazes you and you stumble
+
+[[u turn the light to see it|cavehorror_reveal]]
+
+
+:: cavehorror_bash [black] {"position":"4325,950","size":"100,100"}
+trade damage
+
+[[run to the light|cavehorror_escape]]
+
+
+:: cavehorror_escape [black] {"position":"4625,775","size":"100,100"}
+as you exit the cavern you see something peculiar
+
+[[Step into the light|mansion_start]]
+
+
+:: cavehorror_light [black] {"position":"4450,950","size":"100,100"}
+best option
+
+it's most scared of light
+
+it flees
+
+[[run to the light|cavehorror_escape]]
+
+
+:: cavehorror_reveal [black] {"position":"4550,1125","size":"100,100"}
+u see the monster before you, it's watching, waiting to respond to ur next move
+
+<<for _i to 0; _i lt $inventory.length; _i++>>  <<nobr>>
+	<<switch $item_list[$inventory[_i]].type>>
+    	<<case "sharp">>
+        	[[slash|cavehorror_slash]]
+        <<case "blunt">>
+        	[[bash|cavehorror_bash]]
+        <<case "ranged">>
+        	[[shoot|cavehorror_shoot]]
+        <<case "light">>
+        	[[scare it|cavehorror_light]]
+        <<case "special">>
+        	
+        <<default>>
+        	
+    <</switch>>
+    <</nobr>>
+<</for>>
+
+
+:: cavehorror_shoot [black] {"position":"4700,950","size":"100,100"}
+hits it and causes it to trip as it chases you
+
+[[run to the light|cavehorror_escape]]
+
+
+:: cavehorror_slash [black] {"position":"4575,950","size":"100,100"}
+hurts it
+
+it hurts you
+
+[[run to the light|cavehorror_escape]]
+
+
+:: cemetary_end [path_end black] {"position":"7200,1700","size":"100,100"}
+
+
+
+:: chapel [black] {"position":"4675,2075","size":"100,100"}
+holy power is here
+
+[[enter|chapel_entry]]
+[[continue|chapel_confirm]]
+
+
+:: chapel_artifact [black] {"position":"4925,2075","size":"100,100"}
+this looks useful
+
+[[grab it|chapel_danger]]
+
+
+
+
+:: chapel_breakin [black] {"position":"5100,1925","size":"100,100"}
+the door is holding, but the glass breaks, they're in
+
+[[keep trying the artifact|chapel_unleash]]
+[[try to fight through|chapel_dead]]
+
+
+:: chapel_confirm [black] {"position":"4725,1925","size":"100,100"}
+Are you sure, the holy magic here could be REALLY useful?
+
+[[alright fine|chapel_entry]]
+[[nah I'm good|lowpath_fork]]
+
+
+:: chapel_danger [black] {"position":"5050,2075","size":"100,100"}
+something outside is reacting to this artifact unleashed on the world
+
+silhoettes of clamboring zombies are pressed against the glass
+
+[[try to use the artifact|chapel_breakin]]
+[[try to get out|chapel_stuck]]
+
+
+:: chapel_dead [dead black] {"position":"4975,1925","size":"100,100"}
+
+
+
+:: chapel_entry [black] {"position":"4800,2075","size":"100,100"}
+
+
+[[continue|chapel_artifact]]
+
+
+
+:: chapel_stuck [black] {"position":"5175,2075","size":"100,100"}
+they are banging on the chapel's only entrance too
+
+ur trapped what now
+
+[[try to use the artifact|chapel_breakin]]
+
+maybe another option here
+
+
+:: chapel_unleash [black] {"position":"5275,1950","size":"100,100"}
+as they near you the light from the __ kills them
+
+[[leave before more show up|lowpath_fork]]
+
+
+
+:: coffin_open [black] {"position":"4900,1575","size":"100,100"}
+out comes a witch, gives you something and shows a secret path.
+
+[[continue down the road|cavehorror]]
+[[try secret path|holy_statue]]
+
+
+:: coffin_pain [black] {"position":"4775,1575","size":"100,100"}
+the magic is resisting and damaging you
+
+keep going?
+
+[[continue opening it|coffin_open]]
+[[give up|cavehorror]]
+
+
+:: crossroad [home] {"position":"3475,1550","size":"100,100"}
+As you grab a sword and some armor, the old man beckons you into his home.
+
+He waves towards the table. There are maps and some device lying on the wood.
+
+"One type of magic won't be enough to fix this. We'll need something from all three regions to fix this."
+
+<img src="assets\start\Terrarion-Eldritch-Moon-MtG-Art.jpg">
+
+Here you must choose the course of your journey.
+
+[[Choose your course|path_select]]
+
+
+:: crystal_giant [green] {"position":"2575,1425","size":"100,100"}
+A massive hulk of crystals stops before you and squats down to look at you.
+
+<img src="assets\greenpath\titan_clash\Crystalline-Giant-Ikoria-MtG-Art.jpg">
+
+You are stunned at the shear size of the thing. It isn't trying to hurt you. Does it expect you to say something.
+
+Just as you are about to ask what it wants, more loud steps begin approaching.
+
+[[Look in that direction|titan_approach]]
+
+
+:: crystals [green] {"position":"2700,1500","size":"100,100"}
+As you continue upward, more and more of these crystals are appearing in the terrain, and in larger sizes too. 
+
+<img src="assets\greenpath\terrain\Forest-Ikoria-MtG-Art.jpg">
+
+They seem to have been a part of the environment for a long time, with trees growing around them. They may even be the reason the trees in this area are so large.
+
+[[You hear massive steps coming toward you|crystal_giant]]
+
+
+:: danger_tomb [black] {"position":"6950,1250","size":"100,100"}
+open, and enter, zombies awaken
+
+too many to fight
+
+[[run|danger_tomb_fight]]
+
+
+:: danger_tomb_done [black] {"position":"7225,1150","size":"100,100"}
+further entry would only awaken more zombies, so now what
+
+[[choose another tomb|remaining_tombs]]
+
+
+:: danger_tomb_fight [black] {"position":"7075,1200","size":"100,100"}
+try to shut crypt, but they're out, now what
+
+<<for _i to 0; _i lt $inventory.length; _i++>>  <<nobr>>
+	<<switch $item_list[$inventory[_i]].type>>
+    	<<case "sharp">>
+        	slash scenario
+        <<case "blunt">>
+        	bash scenario
+        <<case "ranged">>
+        	shoot scenario
+        <<case "light">>
+        	
+        <<case "defense">>
+        	
+        <<case "special">>
+        	replace this later
+        	[[use artifact|danger_tomb_done]]
+        <<default>>
+        	
+    <</switch>>
+    <</nobr>>
+<</for>>
+
+
+
+:: darkcore [green] {"position":"1675,2375","size":"100,100"}
+dark hole in the world, but meows for help
+
+if some artifact, u can get it safely
+
+[[use artifact|darkcore_artifact]]
+[[reach in to help|darkcore_hurts]]
+[[ignore|satyr_ambush]]
+
+
+:: darkcore_artifact [green] {"position":"1650,2525","size":"100,100"}
+artifact fixes hole
+
+[[pull out pup|darkcore_save]]
+
+
+:: darkcore_end {"position":"1600,3000","size":"100,100"}
+
+
+
+:: darkcore_fail [green] {"position":"1750,2825","size":"100,100"}
+hand hurst
+
+[[move on|satyr_ambush]]
+
+
+:: darkcore_hurts [green] {"position":"1800,2500","size":"100,100"}
+put hand in, it hurts
+
+still wanna keep going?
+
+[[give up|darkcore_fail]]
+[[pull pup out|darkcore_save]]
+
+
+:: darkcore_save [green] {"position":"1600,2700","size":"100,100"}
+baby safe, mama happy
+
+leads me somewhere
+
+[[follow|darkcore_end]]
+[[nah im good|satyr_ambush]]
+
+
+:: darkpath [black] {"position":"3700,1700","size":"100,100"}
+The Gravedark is a blighted land full of horrors and nightmares. The endless darkness of this swampy territory hides the nightmares lurking in wait of their next victim.
+
+Are you sure you are prepared for this journey?
+
+<img src="assets\start\virtue_of_persistence.jpg">
+
+[[I'm Ready|foul_orchard]]
+[[On second thought...|path_select]]
+
+
+:: day [green] {"position":"1975,1425","size":"100,100"}
+You awake to a calm, bright morning. Your rest has rejuvenated you.
+
+You regain 8 health.
+<<if $health < 92>>
+	<<set $health=$health+8>>
+<<else>>
+	<<set $health=100>>
+<</if>>
+
+<<set $forest_night to false>>
+[[continue your journey|bear]]
+
+
+:: day_again [green] {"position":"1775,725","size":"100,100"}
+Sounds like this festival is dangerous, better sleep through the night and avoid it.
+
+You regain 8 health.
+<<if $health < 92>>
+	<<set $health=$health+92>>
+<<else>>
+	<<set $health=100>>
+<</if>>
+
+<<set $forest_night to false>>
+
+[[Let's keep going|wolf_trapped]]
+
+
+:: daynight_pick [green] {"position":"2150,1350","size":"100,100"}
+You've been running from those titans titans for a while now. By the time you can no longer hear the echoes of their stomping, the sun has started setting.
+
+You can continue your journey through the night, or rest and continue in the morning.
+
+<<set $forest_night to true>>
+
+[[Brave the night|night]]
+[[Rest and travel in the day|day]]
+
+
+:: dead [dead] {"position":"3025,800","size":"100,100"}
+You have died 
+
+
+
+
+:: downstairs_ballroom [black] {"position":"5375,625","size":"100,100"}
+three women
+
+<<if not hasVisited("downstairs_ballroom")>>
+
+say cryptic stuff
+
+artifact
+
+no one's foolish enough to try and take artifact
+
+<<else>>
+
+wanna play with us
+
+<</if>>
+
+[[leave before they can do anything to you|downstairs_right]]
+
+
+:: downstairs_kitchen [black] {"position":"5375,325","size":"100,100"}
+<<if not hasVisited("butcher_fridge")>>
+
+see chef and assistants cooking
+
+offered some mysterious meats
+
+<<else>>
+
+"oh back for another round? Try this"
+
+<</if>>
+
+[[eat|kitchen_yes]]
+[[no thank you|kitchen_no]]
+
+
+:: downstairs_left [black] {"position":"5225,325","size":"100,100"}
+hallway, three doors
+[[Take the left door|downstairs_left_deadend]]
+[[Take the right door|downstairs_right_exit]]
+[[Take the door in front of you|downstairs_kitchen]]
+[[Go back|mansion_entryway]]
+
+
+:: downstairs_left_deadend [black] {"position":"5050,175","size":"100,100"}
+oh well
+
+[[go back|downstairs_left]]
+
+
+:: downstairs_right [black] {"position":"5125,475","size":"100,100"}
+
+
+[[Take the left door|downstairs_ballroom]]
+[[Take the right door|downstairs_right_deadend]]
+[[Take the door in front of you|downstairs_right_trap]]
+[[Go back|mansion_entryway]]
+
+
+:: downstairs_right_deadend [black] {"position":"5000,650","size":"100,100"}
+no where to go
+
+[[go back|downstairs_right]]
+
+
+:: downstairs_right_exit [black] {"position":"5225,175","size":"100,100"}
+following this path shows a backdoor entrance to the mansion, might be useful
+
+<<if hasVisited("mansion_flip")>>
+[[Get out of here|mansion_escape]]
+<<else>>
+[[Go back|downstairs_left]]
+<</if>>
+
+
+:: downstairs_right_trap [black] {"position":"5175,650","size":"100,100"}
+as you take a step in spikes come up and stab ur feet
+
+lose some health
+
+[[go back|downstairs_right]]
+
+
+:: dryads [green] {"position":"625,2350","size":"100,100"}
+see little sapling
+
+[[steal
+
+
+:: elf_ambush [green] {"position":"1250,2100","size":"100,100"}
+ur surrounded
+
+"another human invades our woods"
+
+<<for _i to 0; _i lt $inventory.length; _i++>>  <<nobr>>
+	<<switch $item_list[$inventory[_i]].type>>
+    	<<case "sharp">>
+        	
+        <<case "blunt">>
+        	
+        <<case "long">>
+        	
+        <<case "ranged">>
+        	
+        <<case "light">>
+        	
+        <<case "defense">>
+        	
+        <<case "quest">>
+        	
+        <<default>>
+        	
+    <</switch>>
+    <</nobr>>
+<</for>>
+
+
+:: elf_entry [green] {"position":"1400,2125","size":"100,100"}
+find a statue in the woods
+
+[[fast movement around you|elf_ambush]]
+
+
+:: evil_mirror [black] {"position":"4150,200","size":"100,100"}
+say something different conditionally
+
+"I've heard of demons like you, you're going to offer me some deal to free u from this mirror, right?"
+
+"No need, I know why you're here. You will not leave here without claiming your prize, so meaning freedom is assured"
+
+[[Leave|upstairs_right]]
+
+
+
+:: festival_detect [green] {"position":"425,725","size":"100,100"}
+uh oh, time to run
+
+
+
+
+:: festival_entry [green] {"position":"600,550","size":"100,100"}
+<<if $forest_night is true>>
+	Enter festival grounds
+    
+    wolves are wreaking havoc
+    
+    u sense artifact in there
+    
+    they're distracted u can risk it
+    
+    [[sneak in|festival_sneak]]
+    [[better not|riddle_beast]]
+    
+<<else>>
+	You come upon a girl riding a large wolf through the woods.
+    
+    <<img src="assets\greenpath\daynight\festival\Child-of-the-Pack-Innistrad-Crimson-Vow-MtG-Art.jpg">
+    
+    She and the wolf see you and approach, but they don't seem to mean you any harm. She calls, "Mister, did you come to the party? It was so much fun, you should've been there Mister".
+    
+    The wolf she's riding on growls at her. It seemed to signal her to stop talking cause she then says, "Sorry Mister, we need to go home. It must be lonely for you out here though. Take this."
+    
+    TAKE AN ITEM HERE
+    
+    [[Better keep going|riddle_beast]]
+<</if>>
+
+
+:: festival_leave [green] {"position":"725,800","size":"100,100"}
+too risky
+
+[[get outta there|darkcore]]
+
+
+:: festival_sneak [green] {"position":"600,675","size":"100,100"}
+u reach inner building
+
+u see artifact
+
+[[grab it|festival_detect]]
+[[leave  it|festival_leave]]
+
+
+:: flower_turtle [green] {"position":"1800,2175","size":"100,100"}
+turtle out of ground
+
+[[approach|turtle_give]]
+[[run before anything bad happens|wolf_spirit]]
+
+
+:: forest_god [green] {"position":"1025,2200","size":"100,100"}
+judges you
+
+if good
+
+[[follow the path to the temple|forest_god_end]]
+
+
+:: forest_god_end {"position":"525,2025","size":"100,100"}
+
+
+
+:: foul_orchard [black] {"position":"3850,1700","size":"100,100"}
+You've been wandering through these dark woods, trying to make as little noise as possible in fear of attracting any unnecessary dangers. The chitters and steps in the darkness keep you on edge, the corpses littering the path reminding you of the constant danger.
+
+<img src="assets\terrain\foul_orchard.jpg">
+
+road lead up and road leading down
+up will end with mansion area
+down will end with graveyard area
+
+
+[[up|woods_entry]]
+[[down|swamp_entry]]
+
+
+:: ghostpath [blue] {"position":"3475,1900","size":"100,100"}
+
+
+
+:: grave [black] {"position":"6400,1525","size":"100,100"}
+dangers lurking in the woods, safer in there
+
+insignia on gateway is what u were looking for
+
+[[enter|grave_entry]]
+
+
+:: grave_entry [black] {"position":"6525,1525","size":"100,100"}
+
+
+a man says "get outta here"
+hands drag him away
+
+u hear chains rattling behind you
+
+[[turn around|gravekeeper_entry]]
+
+
+:: gravekeeper_attack [black] {"position":"6675,1300","size":"100,100"}
+a swift strike with ur ____ takes him down
+
+[[loot him|gravekeeper_loot]]
+
+
+
+:: gravekeeper_avoid [black] {"position":"6675,1425","size":"100,100"}
+it passes without seeing u, now what
+
+there are 3 tombs to explore, which one?
+
+[[go1|danger_tomb]]
+[[go2|risk_tomb]]
+[[go3|right_tomb]]
+
+
+:: gravekeeper_entry [black] {"position":"6525,1375","size":"100,100"}
+u see him, what now
+
+[[sneak up and attack him|gravekeeper_attack]]
+[[hide and wait for him to pass|gravekeeper_avoid]]
+[[approach and ask for help|gravekeeper_talk]]
+
+
+:: gravekeeper_loot [black] {"position":"6725,1175","size":"100,100"}
+u take one of his lanterns and the parchment on him
+
+parchment shows a dangerous skull icon next to a symbol of ___
+
+there are three tombs, with symbols of ___
+
+[[go1|danger_tomb]]
+[[go2|risk_tomb]]
+[[go3|right_tomb]]
+
+
+:: gravekeeper_talk [black] {"position":"6675,1550","size":"100,100"}
+hands u a lantern and leads u to a tomb with a __ symbol
+
+[[go1|danger_tomb]]
+[[go2|risk_tomb]]
+[[enter the tomb he showed you|right_tomb]]
+
+
+:: green_spider [green] {"position":"875,1175","size":"100,100"}
+Travelling deeper into the cavern, alone in the dark with only your light. You are running your hands along the edge of the cave for guidance, but your hand is suddenly stuck on something. You're caught in a web.
+
+As you try shaking loose from the sticky web, you hear chittering coming from above you. With your free hand, you shine your light up to find the noise's source.
+
+<img src = "C:\cs_files\dh_twine\assets\greenpath\daynight\spider\Ishkanah-Grafwidow-Eldritch-Moon-MtG-Art.jpg">
+
+You need to find some way out of here.
+
+<<if $forest_night == false>>
+	Help isn't coming, so what do you do?
+<<for _i to 0; _i lt $inventory.length; _i++>>  <<nobr>>
+	<<switch $item_list[$inventory[_i]].type>>
+    	<<case "sharp">>
+        	[[Cut yourself free from the web|spider_cut]]     	
+        <<case "light">>
+        	[[Use the fires from your light to burn the web|spider_burn]]
+        <<case "special">>
+        	
+        <<default>>
+        	[[Struggle to escape the web|spider_squirm]]
+    <</switch>>
+    <</nobr>>
+<</for>>
+<<else>>
+	[[Suddenly...|spider_help]]
+<</if>>
+
+
+:: greenpath [green] {"position":"3250,1700","size":"100,100"}
+The towering trees of the Wild Forest are home to an ecosystem of massive beasts and dangers. Based on the crater-like prints at the edge of town, the children have made stories about the massive wolves and bears that call this terrain home. Are you sure you are prepared for this journey?
+
+<img src="assets\start\virtue_of_growth.jpg">
+
+[[I'm Ready|woods]]
+[[On second thought...|path_select]]
+
+
+:: heirloom_backfire [black] {"position":"5200,1225","size":"100,100"}
+that hurts
+
+what now?
+
+[[leave and keep going|butcher]]
+[[speak the cursed chant|heirloom_unleashed]]
+
+
+:: heirloom_closed [black] {"position":"5150,1375","size":"100,100"}
+what do
+
+[[break it open|heirloom_backfire]]
+[[speak the cursed chant|heirloom_unleashed]]
+[[leave before danger continue down path|butcher]]
+
+
+:: heirloom_take [black] {"position":"5325,1075","size":"100,100"}
+some negative drawback
+
+and now u take it
+
+[[leave the shrine|butcher]]
+
+
+:: heirloom_unleashed [black] {"position":"5325,1225","size":"100,100"}
+cursed magic here, u sure
+
+[[take it|heirloom_take]]
+[[leave it|butcher]]
+
+
+:: holy_statue [black] {"position":"5000,1375","size":"100,100"}
+statue holy heals you
+
+mausoleum near it
+
+[[enter mausoleum|heirloom_closed]]
+[[continue on|butcher]]
+
+
+:: home [home] {"position":"3475,675","size":"100,100"}
+<<nobr>>
+<<set $item_types = ["sharp", "blunt", "ranged", "light", "defense", "special"]>>
+<<set $item_var = ["bad_dagger", "forest_sword", "bad_club", "sling", "bad_lantern", "jerky", "blood", "start_book", "calm_sword"]>>
+<<set $item_list = {
+	"_": {
+    	name: "_",
+        type: "_",
+        power: 0,
+        quest: 0,
+    }, 
+	"bad_dagger": {
+    	name: "Worn Dagger",
+        type: "sharp",
+        power: 1,
+        quest: 0,
+    },
+    "forest_sword": {
+    	name: "NAME LATER",
+        type: "sharp",
+        power: 3,
+        quest: 0,
+    }, 
+    "bad_club": {
+    	name: "Light Club",
+        type: "blunt",
+        power: 1,
+        quest: 0,
+    },
+    "sling": {
+    	name: "Slingshot",
+        type: "ranged",
+        power: 1,
+        quest: 0,
+    },
+    "bad_lantern": {
+    	name: "Rusty Lantern",
+        type: "light",
+        power: 1,
+        quest: 0,
+    },
+	"jerky": {
+    	name: "Dried Jerky",
+        type: "special",
+        power: 0,
+        quest: 0,
+    },
+	"blood": {
+    	name: "Vial of Blood",
+        type: "special",
+        power: 0,
+        quest: 0,
+    }, 
+    "start_book": {
+    	name: "Dusty Book",
+        type: "special",
+        power: 1,
+        quest: 0,
+    },
+    "calm_sword": {
+    	name: "Serene Sword",
+        type: "sharp",
+        power: 2,
+        quest: 0,
+    }
+}>>
+<<set $inventory = []>>
+<<set $health = 100 >>
+<<set $coins = 10>>
+<<set $quest_count = 0>>
+<<set $damage = 0>>
+<<set $enemy_health = 0>>
+<<set $defense = 0>>
+<<set $green_done = false>>
+<<set $black_done = false>>
+<<set $blue_done = false>>
+
+<</nobr>>
+You were born and raised in a calm farming village. The wilds beyond this region are known for being dangerous, so this village is all you've ever known.
+
+<img src="assets\start\Gavony-Township-Art.jpg" alt="     WARNING: To play with images, follow the link: https://vinhsnguyen.github.io/dh_twine/">
+
+[[One day...|plague]]
+
+
+:: horror_clash [black] {"position":"4375,1525","size":"100,100"}
+a flying abomination comes thru the sky
+
+the horror's attention shifts and the two struggle
+
+[[run while you can|horror_escape]]
+
+
+:: horror_escape [black] {"position":"4475,1650","size":"100,100"}
+as you run, the sound of those two monsters fades away until can't hear
+
+[[continue|mystery_coffin]]
+
+
+:: horror_immune [black] {"position":"4250,1525","size":"100,100"}
+your attack goes through it and it hurts you
+
+it's about to strike again
+
+[[suddenly|horror_clash]]
+
+
+:: horror_run [black] {"position":"4250,1650","size":"100,100"}
+you run, but it's fast it's catching up to you and about to strike when
+
+[[suddenly|horror_escape]]
+
+
+:: hungry_wolf [green] {"position":"1025,600","size":"100,100"}
+Walking through the woods, you suddenly feel eyes staring at you. You are in danger.
+
+You turn every which way to find where it's coming from.
+
+<img src = "assets\greenpath\daynight\wolf\Snarling-Wolf-Innistrad-Midnight-Hunt-MtG-Art.jpg">
+
+You can make out two focused eyes in the thicket. It's bound to strike soon. What can you do?
+<<set $enemy_health = 12>>
+The wolf has $enemy_health health.
+<<for _i to 0; _i lt $inventory.length; _i++>>  <<nobr>>
+	<<switch $item_list[$inventory[_i]].type>>
+    	<<case "sharp">>
+        	<<link `"Stab with your " + $item_list[$inventory[_i]].name` "wolf_slash">>
+            <</link>>
+        <<case "blunt">>
+        	<<link `"Bash it with your " + $item_list[$inventory[_i]].name` "wolf_bash">>
+            <</link>>
+        <<case "ranged">>
+        	<<link `"Shoot with your " + $item_list[$inventory[_i]].name` "wolf_shoot">>
+            <</link>>
+        <<case "light">>
+        	<<link `"Scare it away with the fire from your " + $item_list[$inventory[_i]].name` "wolf_light">>
+            <</link>>
+        <<case "special">>
+    <</switch>>
+    <</nobr>>
+<</for>>
+[[Climp up a tree|wolf_run]]
+
+<<if false>>
+[[wolf_slash]]
+[[wolf_bash]]
+[[wolf_shoot]]
+[[wolf_light]]
+[[wolf_run]]
+<</if>>
+
+
+:: item1 [black] {"position":"6200,1725","size":"100,100"}
+got it
+
+[[uh oh|witch_alarm]]
+
+
+:: item2 [black] {"position":"6200,1850","size":"100,100"}
+got it
+
+[[uh oh|witch_alarm]]
+
+
+:: killer_arrives [black] {"position":"5600,1725","size":"100,100"}
+threatening figure
+
+<<for _i to 0; _i lt $inventory.length; _i++>>  <<nobr>>
+	<<switch $item_list[$inventory[_i]].type>>
+    	<<case "sharp">>
+        	[[stab|killer_stab]]
+        <<case "blunt">>
+        	[[whack|killer_bash]]
+        <<case "ranged">>
+        	[[shoot|killer_shoot]]
+        <<case "defense">>
+        	[[block and run|killer_block]]
+        <<case "special">>
+        	[[use ur artifact|killer_artifact]]
+        <<default>>
+        	[[run|killer_run]]
+    <</switch>>
+    <</nobr>>
+<</for>>
+
+
+:: killer_artifact [black] {"position":"5300,1600","size":"100,100"}
+he not a zombie, useless
+
+take damage
+
+what now?
+
+<<for _i to 0; _i lt $inventory.length; _i++>>  <<nobr>>
+	<<switch $item_list[$inventory[_i]].type>>
+    	<<case "sharp">>
+        	[[stab|killer_stab]]
+        <<case "blunt">>
+        	[[whack|killer_bash]]
+        <<case "ranged">>
+        	[[shoot|killer_shoot]]
+        <<case "defense">>
+        	[[block and run|killer_block]]
+        <<case "special">>
+        	
+        <<default>>
+        	[[run|killer_run]]
+    <</switch>>
+    <</nobr>>
+<</for>>
+
+
+:: killer_bash [black] {"position":"5725,1600","size":"100,100"}
+pretty good chocie
+
+knock him out
+
+[[risk looting him|killer_loot]]
+[[get outta there|killer_escape]]
+
+
+:: killer_block [black] {"position":"5175,1600","size":"100,100"}
+take x damage and escape, he's kinda slow
+
+[[keep running|killer_escape]]
+
+
+:: killer_escape [black] {"position":"5500,1425","size":"100,100"}
+don't know where to go
+
+[[you hear stomps|swamptitan]]
+
+
+:: killer_loot [black] {"position":"5875,1450","size":"100,100"}
+
+
+[[follow map|grave]]
+
+
+:: killer_run [black] {"position":"5850,1600","size":"100,100"}
+take x damage and escape, he's kinda slow
+
+[[keep running|killer_escape]]
+
+
+:: killer_shoot [black] {"position":"5450,1600","size":"100,100"}
+if strong enough, cripple him, might take damage
+
+[[run|killer_escape]]
+
+
+:: killer_stab [black] {"position":"5600,1600","size":"100,100"}
+if strong enough, kill him,
+
+[[loot him|killer_loot]]
+
+might just cripple him and u take damage
+
+
+
+
+:: kitchen_no [black] {"position":"5375,450","size":"100,100"}
+well come back if you're feeling peckish
+
+[[get outta there|downstairs_left]]
+
+
+:: kitchen_yes [black] {"position":"5375,200","size":"100,100"}
+one bite and spit out
+
+"oh well, not to your tastes"
+
+lose like 2 health
+
+[[get outta there|downstairs_left]]
+
+
+:: leave_pest [green] {"position":"1925,2050","size":"100,100"}
+As you get further from the hut, the screeches of the research experiments fades away
+
+[[Go upstream of the river|spring]]
+[[Exit the marsh|squirrel_entry]]
+
+
+:: lil_zombie {"position":"3850,1425","size":"100,100"}
+In your rush to reach the artifact, you trip over an odd bump in the road, a bump which starts shaking. Crawling out of that dirt, comes... a child?
+
+<img src="assets\spooky\Persist-Modern-Horizons-2-MtG-Art.jpg">
+
+No, it is a gnome, died and turned to a zombie, and now it has it's eyes set on you.
+It starts chasing after you.
+
+[[Prepare to fight|lil_zombie_safe]]
+[[Climb a tree to get out of reach|lil_zombie_dead]]
+
+
+:: lil_zombie_dead {"position":"3850,1300","size":"100,100"}
+You run to the nearest tree and climb for your life. Seems you weren't as fast as you thought, as halfway up the tree, the zombie has jumped on your leg and starts biting you. You yell in pain. The shock of the bite and the extra weight dragging you down cause you to fall flat on the ground. You do not recover in time and become easy prey.
+
+<img src="assets\event\Porphyry-Nodes-Planar-Chaos-MtG-Art.jpg">
+
+THE END
+
+
+
+
+:: lil_zombie_safe {"position":"3975,1425","size":"100,100"}
+You draw your sword. The monster is nimble but your greater size gives you a major advantage. As it jumps at you, one clean slash cuts it in half. It stops moving, and nothing is stopping you from claiming your prize.
+
+<img src="assets\macguffins\Cursed-Totem-Modern-Horizons-2-MtG-Art.jpg">
+
+You return home, and with the totem's powerful magic, Old Man Sticks was able to purify the town of the plague tormenting it.
+
+THE END
+
+
+:: lowpath_fork [black] {"position":"5500,1900","size":"100,100"}
+where go
+
+[[go through thick woods|killer_arrives]]
+[[head to nearby shelter|witch_house]]
+
+
+:: mansion_end [path_end black] {"position":"5850,225","size":"100,100"}
+
+
+
+:: mansion_entryway [black] {"position":"4950,300","size":"100,100"}
+
+
+[[Go through the door on the left|downstairs_left]]
+[[Go through the door on the right|downstairs_right]]
+[[Go up the staircase|mansion_upstairs]]
+
+
+:: mansion_escape [black] {"position":"5600,125","size":"100,100"}
+as you're return to the path back home, you see the house getting up
+
+[[Return home|mansion_end]]
+
+
+:: mansion_flip [black] {"position":"4100,550","size":"100,100"}
+grab it, but you hear the house start to shake
+
+screams down the hallway
+
+the altar blasts you out of the room
+
+[[
+
+
+:: mansion_frontdoor [black] {"position":"4825,475","size":"100,100"}
+see entryway
+
+someone coming down stairwell
+
+"be careful"
+
+sense no danger
+
+[[Get a closer look|mansion_intro]]
+
+
+:: mansion_intro [black] {"position":"4800,350","size":"100,100"}
+it's a zombie
+
+"be careful, you can walk around, but grab the thing and the residents will bite"
+
+he leaves upstairs
+
+[[where to now?|mansion_entryway]]
+
+
+:: mansion_knock [black] {"position":"4650,500","size":"100,100"}
+no answer, but you feel as if the house creaks in response
+
+[[enter anyway|mansion_frontdoor]]
+
+
+:: mansion_start [black] {"position":"4775,625","size":"100,100"}
+u enter the light to see something unexpected
+
+theres a mansion in the swamp
+
+sense powerful artifact in there
+
+[[knock|mansion_knock]]
+[[head in|mansion_frontdoor]]
+
+
+:: mansion_upstairs [black] {"position":"4475,300","size":"100,100"}
+
+
+[[Follow the left corridor|upstairs_left]]
+[[Follow the right corridor|upstairs_right]]
+
+
+:: marsh [green] {"position":"2600,1675","size":"100,100"}
+As you go deeper into the path, the ground is getting wetter and harder to wade through. The mud is getting in your boots and dirtying your clothes.
+
+Up ahead you see a building lying over the marsh.
+
+<img src="assets\greenpath\terrain\witch_cottage.jpg">
+
+The lights and shadows inside tell you there is someone inside.
+
+[[Knock on the front door|pest_knock]]
+[[Too risky, sneak around|pest_caught_sneaking]]
+
+
+:: mint_blunt {"position":"6925,2025","size":"100,100"}
+best option, it shatters
+
+[[
+
+
+:: mint_light {"position":"6925,2125","size":"100,100"}
+
+
+
+:: mint_monster {"position":"6750,2125","size":"100,100"}
+on the way u see candy thing, what do?
+
+<<for _i to 0; _i lt $inventory.length; _i++>>  <<nobr>>
+	<<switch $item_list[$inventory[_i]].type>>
+    	<<case "sharp">>
+        	[[stab it|mint_sharp]]
+        <<case "blunt">>
+        	[[smash it|mint_blunt]]
+        <<case "ranged">>
+        	[[shoot it|mint_shoot]]
+        <<case "light">>
+        	[[scare it away|mint_light]]
+        <<case "special">>
+        	
+        <<default>>
+        	[[eat it|mint_toothache]]
+    <</switch>>
+    <</nobr>>
+<</for>>
+
+
+
+
+
+:: mint_sharp {"position":"6925,2325","size":"100,100"}
+
+
+
+:: mint_shoot {"position":"6925,2225","size":"100,100"}
+
+
+
+:: mint_toothache {"position":"6750,2250","size":"100,100"}
+too hard for mouth, what now
+
+<<for _i to 0; _i lt $inventory.length; _i++>>  <<nobr>>
+	<<switch $item_list[$inventory[_i]].type>>
+    	<<case "sharp">>
+        	[[stab it|mint_sharp]]
+        <<case "blunt">>
+        	[[smash it|mint_blunt]]
+        <<case "ranged">>
+        	[[shoot it|mint_shoot]]
+        <<case "light">>
+        	[[scare it away|mint_light]]
+        <<case "special">>
+
+    <</switch>>
+    <</nobr>>
+<</for>>
+
+
+:: mystery_coffin [black] {"position":"4625,1550","size":"100,100"}
+u stop to refresh urself at a stream when notice a coffin lying at the side of the river
+
+[[open it|coffin_pain]]
+[[ignore it|cavehorror]]
+
+
+:: night [green] {"position":"1975,1275","size":"100,100"}
+With your light guiding you, you continue in the dark of night.
+
+[[brave the night|bear]]
+
+
+:: old_sword [green] {"position":"2375,1500","size":"100,100"}
+You find the source of the reflection.
+
+<img src="C:\cs_files\dh_twine\assets\greenpath\old_sword\Blessed-Respite-Modern-Horizons-2-MtG-Art.jpg">
+
+This corpse seems to have been here for decades. It doesn't seem like they died in combat, more like they chose this peaceful place as their final resting spot.
+
+[[Take the sword|old_sword_get]]
+[[Leave it alone|daynight_pick]]
+
+
+:: old_sword_get [green] {"position":"2175,1500","size":"100,100"}
+As you grab the sword, the body starts to move!
+
+You jump back prepared to fight, but the body just slumps forward. I guess it really was just a corpse after all.
+
+<img src = "assets\greenpath\old_sword\Gaeas-Blessing-Dominaria-MtG-Art.jpg">
+
+<<nobr>>
+<<set $type_check = -1>>
+<<for _i to 0; _i lt $inventory.length; _i++>>  
+	<<if $item_list[$inventory[_i]].type == "sharp">>
+    	<<set $type_check = _i>>
+    <</if>>
+<</for>>
+
+<<if $type_check != -1>>
+	<<if $item_list[$inventory[$type_check]].power <= $item_list["calm_sword"].power>>
+    	Replaced the <<print $item_list[$inventory[$type_check]].name>> (Power: <<print $item_list[$inventory[$type_check]].power>>) with the $item_list["calm_sword"].name (Power: $item_list["calm_sword"].power).
+    	<<run $inventory.deleteAt($type_check)>>
+        <<run $inventory.push("calm_sword")>>
+        
+    <<else>>
+    	No need. Your $item_list[$inventory[$type_check]].name (Power: $item_list[$inventory[$type_check]].power) is better than the $item_list["calm_sword"].name (Power: $item_list["_"].power).
+    <</if>>
+<<else>>
+	You acquired the $item_list["calm_sword"].name (Power: $item_list["calm_sword"].power).
+    <<run $inventory.push("calm_sword")>>
+<</if>>
+<</nobr>>
+[[Move on|daynight_pick]]
+
+
+:: ooze [green] {"position":"3000,1700","size":"100,100"}
+On your trek, your hear the sound of squelching gettinbg closer. You turn to see where the sound is coming from.
+
+<img src="assets\greenpath\ooze_monster\Oran-Rief-Ooze-MtG-Art.jpg">
+
+There is a massive mass of sentient ooze heading towards you, singing everything in its path with its acidic body.
+
+<<for _i to 0; _i lt $inventory.length; _i++>>  <<nobr>>
+	<<switch $item_list[$inventory[_i]].type>>
+    	<<case "sharp">>
+        	<<link `"Stab at it with your " + $item_list[$inventory[_i]].name` "ooze_stab">>
+            <</link>>
+            <br>
+        <<case "blunt">>
+            <<link `"Hit it with your " + $item_list[$inventory[_i]].name` "ooze_bash">>
+            <</link>>
+        	<br>
+        <<case "ranged">>
+        	<<link `"Shoot it with your " + $item_list[$inventory[_i]].name` "ooze_shoot">>
+            <</link>>
+        <<case "light">>
+        <<case "defense">>
+        <<case "quest">>
+    <</switch>>
+    <</nobr>>
+<</for>>
+        	[[Punch it|ooze_punch]] 
+        	[[Run past|ooze_run]]
+            [[Sneak past|ooze_sneak]]
+<<if false>>
+[[ooze_stab]]
+[[ooze_bash]]
+[[ooze_shoot]]
+<</if>>
+
+
+:: ooze_bash [green] {"position":"2875,1650","size":"100,100"}
+You attempt to cut through the creature, but your weapon harmlessly passes through. The ooze creeps onto your leg burning your bare skin with its acidic body.
+
+You take 12 damage. <<set $health = $health - 12 + $defense>>
+
+[[run|uphill/downhill]]
+
+
+:: ooze_death [end green] {"position":"3000,2025","size":"100,100"}
+You fail to escape the ooze's gelatinous form. You feel the ooze slowly digesting you as you run out of breath, slowly fading from this world.
+
+<img src="assets\dead\Consuming-Blob-Innistrad-Midnight-Hunt-MtG-Art.jpg">
+
+YOU HAVE DIED
+
+
+:: ooze_punch [green] {"position":"3000,1900","size":"100,100"}
+You rush in, attempting to strike it with you bare fists, but your arm simply sinks into its body.
+
+You try to pull it out but it just continues to envelope you until you are fully submerged in its body.
+
+[[Continue to struggle|ooze_death]]
+
+
+:: ooze_run [green] {"position":"2875,1775","size":"100,100"}
+You run away, but it seems drawn to your fast movements. The ooze touches you as you flee singing you a bit.
+
+You take 7 damage. <<set $health = $health - 7  + $defense>>
+
+[[keep runniung|uphill/downhill]]
+
+
+:: ooze_shoot [green] {"position":"2875,1400","size":"100,100"}
+Shooting it has no effect. Everything just sinks into its amorphous body. The ooze lunges onto your leg burning your bare skin with its acidic body.
+
+<<set $damage = 12 - $defense>>
+You take $damage damage. <<set $health = $health - $damage>>
+
+[[run|uphill/downhill]]
+
+
+:: ooze_sneak [green] {"position":"2875,1900","size":"100,100"}
+You stay still. The ooze stops moving soon after. Without any eyes or ears, it seems to only be able to detect motion.
+
+You silently step away without the slime noticing you. As some deer run by, the ooze lurches away and you are safe again.
+
+[[Continue|uphill/downhill]]
+
+
+
+:: ooze_stab [green] {"position":"2875,1525","size":"100,100"}
+You attempt to cut through the creature, but your weapon harmlessly passes through. The ooze creeps onto your leg burning your bare skin with its acidic body.
+
+You take 12 damage. <<set $health = $health - 12 + $defense>>
+
+[[run|uphill/downhill]]
+
+
+:: path_select [home] {"position":"3475,1700","size":"100,100"}
+Choose your path
+
+[[Traverse the Wild Forest|greenpath]]
+
+<<if false>>
+[[Enter the Gravedark|darkpath]]
+[[Head to the Biblioplex|ghostpath]]
+<</if>>
+
+
+
+:: peaceful_glade [green] {"position":"2375,1350","size":"100,100"}
+After running for what feels like ages, you come upon a serene glade.
+
+<img src="assets\greenpath\terrain\Forest-Kaladesh-MtG-Art.jpg">
+
+You don't sense any danger in this peaceful part of the woods.
+
+[[You see something glinting nearby|old_sword]]
+
+
+
+
+:: pest_begone [green] {"position":"2150,1850","size":"100,100"}
+He squints at you in distrust. Doesn't seem like he believes you.
+"Leave this place immediately! And tell no one that I am here."
+
+[[Leave before he gets more angry|leave_pest]]
+
+
+:: pest_bye [green] {"position":"1975,1775","size":"100,100"}
+"I see, well good luck on your journey", he says as he opens the back door for you, "Feel free to come again if you're ever in the area"
+
+[[Continue on your journey|leave_pest]]
+
+
+:: pest_caught_sneaking [green] {"position":"2450,1750","size":"100,100"}
+You attempt to sneak past silently, but you slip on somethin in the bog and trip, making a loud splash.
+
+The front door opens with a crash as a man comes out, knife in hand and a threatening look in his eye. "Who are you!? What do you think you're doing here?"
+
+Still in the swampy waters, it would be difficult to reach him from here.
+
+[[Attack him|pest_violent_entry]]
+[[Speak honestly|pest_welcome]]
+[[Lie|pest_begone]]
+
+
+:: pest_chest [green] {"position":"2325,2350","size":"100,100"}
+cool, now what
+
+item get
+
+[[leave|leave_pest]]
+[[free them|pest_hungry]]
+
+
+:: pest_evil [green] {"position":"2025,1625","size":"100,100"}
+"These precious pests represent opportunity. They are exceptionally easy to train. Once they are large enough to pose a threat, I will be able to sell them for a profit for whoever needs their destructive force. These vermin bread rapidly so I will be making endless profit."
+
+You notice a release lever nearby that would free these pests from captivity.
+
+[["Well good luck with that, bye"|pest_bye]]
+[[Hit the lever and free the pests|pest_outbreak]]
+
+
+:: pest_guy_bash [green] {"position":"2650,2000","size":"100,100"}
+if good club
+
+[[he dead|pest_winner]]
+
+if bad club
+
+[[fights back|pest_loser]]
+
+
+:: pest_guy_punch [green] {"position":"2400,2000","size":"100,100"}
+he throw potion in ur face, u run away
+
+[[run away|pest_loser]]
+
+
+:: pest_guy_stab [green] {"position":"2525,2000","size":"100,100"}
+if good sword
+
+[[he dead|pest_winner]]
+
+if bad sword
+
+[[fights back|pest_loser]]
+
+
+:: pest_hungry [green] {"position":"1750,1750","size":"100,100"}
+You don't have time to watch and see what happens to the man because the pests are coming for you too.
+
+[[Fight back|pest_struggle]]
+[[Run|leave_pest]]
+
+
+:: pest_knock [green] {"position":"2450,1625","size":"100,100"}
+A man in heavy protective clothing and a merry grin opens the door to greet you. "Now who do we have here?"
+
+"I'm just trying to find an artifact that will help my village, can I rest here for a bit?", you ask.
+
+"My my, aren't we kindhearted. Very well, come in."
+
+[[Follow him inside|pest_welcome]]
+
+
+:: pest_loser [green] {"position":"2375,2225","size":"100,100"}
+run away
+
+[[continue|leave_pest]]
+
+
+:: pest_outbreak [green] {"position":"1900,1625","size":"100,100"}
+All the animal cages open at once.
+
+"WHAT HAVE YOU DONE!" he screams, "And after I was so hospitable to you!"
+
+The pests start crawling toward their caretaker. It seems he's also been breeding them to be more vicious as well.
+
+"No, No! Get away!"
+
+<img src="assets\greenpath\pest_outbreak\Containment-Breach-Strixhaven-MtG-Art.png"
+
+[[uh oh|pest_hungry]]
+
+
+:: pest_show [green] {"position":"2150,1625","size":"100,100"}
+"Oh that, well... it'll be better if I show you," he says as he leads you into the next room.
+
+<img src="assets\greenpath\pest_outbreak\Tend-the-Pests-Strixhaven-MtG-Art.jpg">
+
+"These are Bog Mites that I've been breeding and cultivating. Each generation has been bigger and stronger than the last. One day I hope to breed one as large as this house."
+
+[["Why go through all this effort?"|pest_evil]]
+
+
+:: pest_struggle [green] {"position":"1625,1750","size":"100,100"}
+You use your equipment to fight back, killing several of them, but their numbers seem to be endless
+
+You take 19 damage. <<set $health = $health - 19>>
+
+[[Keep fighting them|pest_struggle]]
+[[Run|leave_pest]]
+
+
+:: pest_violent_entry [green] {"position":"2525,1875","size":"100,100"}
+how fight
+
+<<for _i to 0; _i lt $inventory.length; _i++>>  <<nobr>>
+	<<switch $item_list[$inventory[_i]].type>>
+    	<<case "sharp">>
+        	[[stab him|pest_guy_stab]]
+        <<case "blunt">>
+        	[[whack him|pest_guy_bash]]
+        <<case "quest">>
+        	
+        <<default>>
+        	[[punch him|pest_guy_punch]]
+    <</switch>>
+    <</nobr>>
+<</for>>
+
+
+:: pest_welcome [green] {"position":"2300,1675","size":"100,100"}
+"Sit there and I'll fix something for you to eat."
+
+You rest your tired legs as he brings you a bowl of soup.
+
+"It's been some time since I had guests. My experiments have had me so busy as of late."
+
+You regain 10 health.
+<<if $health < 90>>
+	<<set $health=$health+10>>
+<<else>>
+	<<set $health=100>>
+<</if>>
+
+You notice some screeching and scratching coming from the other room.
+
+[["What's that?"|pest_show]]
+[["Thanks, but I should get going"|pest_bye]]
+
+
+:: pest_winner [green] {"position":"2525,2225","size":"100,100"}
+what now?
+
+[[grab what's in chest|pest_chest]]
+[[free them|pest_hungry]]
+
+
+:: plague [home] {"position":"3475,800","size":"100,100"}
+A terrible plague strikes your town. For weeks, more and more of the population is becoming ill and dying. 
+
+<img src="assets\start\Toxic-Deluge-Art.jpg">
+
+As one of the last healthy adults left, you are approached by the creepy village recluse, Old Man Sticks.
+
+<img src="assets\start\Malevolent-Hermit-Innistrad-Midnight-Hunt-MtG-Art.jpg">
+
+"If you want to save them, come with me."
+
+[[Follow him|starter_pack]]
+
+
+:: remaining_tombs [black] {"position":"7375,1250","size":"100,100"}
+which tomb go to now
+
+<<if not hasVisited("danger_tomb")>>
+	[[___|danger_tomb]]
+<</if>>
+
+<<if not hasVisited("risk_tomb")>>
+	[[____|risk_tomb]]
+<</if>>
+
+[[______|right_tomb]]
+
+
+:: riddle_beast [green] {"position":"275,500","size":"100,100"}
+As you approach the ruins' entrance, you hear the weight of massive steps coming from behind these ruins. A massive beast bounds towards you faster than you can reach the entryway.
+
+<img src="assets\beasts\the-questing-beast.jpg">
+
+Fortunately, the creature isn't trying to hurt you, it simply asks, "When you do not know what I am, I am something, but when you know what I am, I am nothing. What am I?"
+
+[["Um... what?"|riddle_beast_dead]]
+[["A gift"|riddle_beast_dead]]
+[["A riddle"|riddle_beast_safe]]
+
+
+
+:: riddle_beast_dead [dead green] {"position":"275,375","size":"100,100"}
+The beast gives a disappointed sigh, then approaches you, all fangs beared at you. You have no hope of running away, as your fate is sealed.
+
+<img src="assets\event\Porphyry-Nodes-Planar-Chaos-MtG-Art.jpg">
+
+THE END.
+
+
+:: riddle_beast_safe [green path_end] {"position":"150,500","size":"100,100"}
+After a short pause, the beast responds "Well done" and bounds away, opening the path into the ruins. Inside, you see the fountain you have been searching for.
+
+<img src="assets\goodies\Radiant-Fountain-M15-MtG-Art.jpg">
+
+With this fountain's healing waters, you can cure your people of this plague and save your village. You return as a hero to your people.
+
+THE END
+
+
+:: right_tomb [black] {"position":"6925,1575","size":"100,100"}
+there is ghoul snacking
+
+<<for _i to 0; _i lt $inventory.length; _i++>>  <<nobr>>
+	<<switch $item_list[$inventory[_i]].type>>
+    	<<case "sharp">>
+        	slash scenario
+        <<case "blunt">>
+        	bash scenario
+        <<case "ranged">>
+        	shoot scenario
+        <<case "light">>
+        	
+        <<case "defense">>
+        	
+        <<case "special">>
+        	replace this later
+        	[[use artifact|cemetary_end]]
+        <<default>>
+        	
+    <</switch>>
+    <</nobr>>
+<</for>>
+
+
+:: risk_tomb [black] {"position":"6950,1375","size":"100,100"}
+enter and married couple asks something
+
+[[bad response|risk_tomb_fight]]
+[[good_response|risk_tomb_success]]
+
+
+
+:: risk_tomb_fight [black] {"position":"7075,1325","size":"100,100"}
+
+<<for _i to 0; _i lt $inventory.length; _i++>>  <<nobr>>
+	<<switch $item_list[$inventory[_i]].type>>
+    	<<case "sharp">>
+        	slash scenario
+        <<case "blunt">>
+        	bash scenario
+        <<case "ranged">>
+        	shoot scenario
+        <<case "light">>
+        	
+        <<case "defense">>
+        	
+        <<case "special">>
+        	replace this later
+        	[[use artifact|risk_tomb_loot]]
+        <<default>>
+        	
+    <</switch>>
+    <</nobr>>
+<</for>>
+
+
+:: risk_tomb_loot [black] {"position":"7250,1400","size":"100,100"}
+
+
+[[leave tomb|remaining_tombs]]
+
+
+:: risk_tomb_success [black] {"position":"7075,1450","size":"100,100"}
+the couple is back to rest, and u can safely grab the ___
+
+[[grab it|risk_tomb_loot]]
+
+
+:: satyr_ambush [green] {"position":"1275,2875","size":"100,100"}
+knife to neck, do want we want or else
+
+surrounded can't run
+
+<<for _i to 0; _i lt $inventory.length; _i++>>  <<nobr>>
+	<<switch $item_list[$inventory[_i]].type>>
+    	<<case "sharp">>
+        	[[slash them|satyr_slash]]
+        <<case "blunt">>
+        	[[bash them|satyr_bash]]
+        <<case "ranged">>
+        	[[shoot them|satyr_ranged]]
+        <<case "defense">>
+        	[[block them and run|satyr_block]]
+        <<case "quest">>
+        	
+        <<default>>
+        	[[submit|satyr_request]]
+    <</switch>>
+    <</nobr>>
+<</for>>
+
+
+:: satyr_bash [green] {"position":"1250,2625","size":"100,100"}
+if strong enough
+
+[[leave|dryads]]
+
+else
+
+[[surrender|satyr_request]] 
+
+
+:: satyr_block [green] {"position":"1000,2625","size":"100,100"}
+if strong enough
+
+[[leave|dryads]]
+
+else
+
+[[surrender|satyr_request]] 
+
+
+:: satyr_egg [green] {"position":"800,2875","size":"100,100"}
+more eggs could heal u
+
+random generator:
+
+might hurt you and force you to leave
+
+[[grab another|satyr_egg]]
+[[jump ship|satyr_return]]
+
+
+:: satyr_fight [green] {"position":"600,2575","size":"100,100"}
+
+<<for _i to 0; _i lt $inventory.length; _i++>>  <<nobr>>
+	<<switch $item_list[$inventory[_i]].type>>
+    	<<case "sharp">>
+        	[[slash them|satyr_slash]]
+        <<case "blunt">>
+        	[[bash them|satyr_bash]]
+        <<case "ranged">>
+        	[[shoot them|satyr_ranged]]
+        <<case "defense">>
+        	[[block them and run|satyr_block]]
+        <<case "quest">>
+        	
+        <<default>>
+        	[[run|satyr_run]]
+    <</switch>>
+    <</nobr>>
+<</for>>
+
+
+:: satyr_nest [green] {"position":"950,2875","size":"100,100"}
+grab first egg
+
+[[grab another?|satyr_egg]]
+[[nah get outta there|satyr_return]]
+
+
+:: satyr_ranged [green] {"position":"1125,2625","size":"100,100"}
+if strong enough
+
+[[leave|dryads]]
+
+else
+
+[[surrender|satyr_request]] 
+
+
+:: satyr_request [green] {"position":"1100,2875","size":"100,100"}
+sneak in and steal goose eggs, easy
+
+[[sneak into the nest|satyr_nest]]
+
+
+:: satyr_return [green] {"position":"750,2725","size":"100,100"}
+thanks, but we're just gonna kill u anyway
+
+[[haha good joke|satyr_fight]]
+
+some other condition avoids fight
+
+[[continue on|dryads]]
+
+
+:: satyr_run [green] {"position":"875,2625","size":"100,100"}
+hurt but gets out
+
+[[keep running|dryads]]
+
+
+:: satyr_slash [green] {"position":"1375,2625","size":"100,100"}
+if strong enough
+
+[[leave|dryads]]
+
+else
+
+[[surrender|satyr_request]] 
+
+
+:: spider_bow [green] {"position":"1150,1225","size":"100,100"}
+<img src = "assets\items\ranged\Elven-Bow-Kaldheim-MtG-Art.jpg">
+
+"It may be old, but its reliable, I promise. That thing's babies are gonna start coming so you best get out of here ASAP"
+
+[[That sounds like a good idea|hungry_wolf]]
+
+
+:: spider_burn [green] {"position":"725,1250","size":"100,100"}
+You use the fires from your light to burn away the spiderwebs holding you. The fires burn you too, but you are now free.
+
+You take 7 damage from the fire.
+
+You run to escape this spider-infested cavern. In your flight, one of spiders bite you. Hope these guys aren't venomous.
+
+<<set $damage = 28 - $defense>>
+You take $damage damage.
+
+[[Keep running|spider_choice]]
+
+
+:: spider_choice [green] {"position":"575,1250","size":"100,100"}
+As you run away from the spiders, you notice the corpse of what looks like an archeologist. You can sense a great magic coming from the corpse's backpack. Do you risk picking it up?
+
+[[Yes|spider_grab]]
+[[No|spider_escape]]
+
+
+:: spider_cut [green] {"position":"725,1350","size":"100,100"}
+Your weapon is sharp enough to cut you free, but the massive spider and its babies are closing in on you.
+
+You run to escape this spider-infested cavern. In your flight, one of spiders bite you. Hope these guys aren't venomous.
+
+<<set $damage = 21 - $defense>>
+You take $damage damage.
+
+[[Keep running|spider_choice]]
+
+
+:: spider_dead [end green] {"position":"575,1050","size":"100,100"}
+You keep pulling away from the web, but you don't have the traction to free yourself. The spiders slowly swarm you, as you become just another meal for this brood.
+
+<img src = "assets\greenpath\daynight\spider\Curse-of-Clinging-Webs-Innistrad-Midnight-Hunt-MtG-Art.jpg">
+
+YOU ARE DEAD
+
+
+:: spider_end [path_end green] {"position":"250,1175","size":"100,100"}
+
+
+
+:: spider_escape [green] {"position":"500,1500","size":"100,100"}
+You make it out of the cave alive, but out of breath. After running through the dark, you have come out of a different entrance than you came through.
+
+[[Better to go forward than going back into the cave|dryads]]
+
+
+:: spider_grab [green] {"position":"425,1200","size":"100,100"}
+You stop to pull the backpack off of the corpse. You manage to pry the bag off but not before a handful of small spiders crawl onto you and start biting you.
+
+You take 8 damage.
+
+You try shaking them off, but for every spider you get off your body, more start crawling onto you.
+
+You take another 8 damage.
+
+You decide to just ignore them for now and get out of the cave as soon as possible, with those spiders biting you all the way through.
+
+You take 14 damage.
+
+<<set $health = $health - 30>>
+
+[[Sprint towards the light at the cave opening|spider_end]]
+
+
+:: spider_help [green] {"position":"875,1300","size":"100,100"}
+As the monster closes in on you, bright flares start flying through the air, exploding when they hit the beast. The massive spider starts to flee before a slew of massive arrows strike it in the head, killing it.
+
+<img src="assets\greenpath\daynight\spider\Lurking-Deadeye-Ikoria-MtG-Art.jpg">
+
+"Hey there, thanks for being such good bait! I was looking for the right moment to kill that thing, but it was always on guard. As thanks, how about you take one of my old bows."
+
+[["Sure, thanks!"|spider_bow]]
+
+
+:: spider_squirm [green] {"position":"725,1150","size":"100,100"}
+You try to pull yourself out of the silk web, But you trip and your foot gets stuck on another part of the web.
+
+[[Keep trying to free yourself|spider_dead]]
+
+
+:: spring [green] {"position":"1925,2175","size":"100,100"}
+You hear water crashing up ahead. You continue to see
+
+[[land shifting|flower_turtle]]
+
+
+:: squirrel end [path_end green] {"position":"850,1675","size":"100,100"}
+
+
+
+:: squirrel_dead [end green] {"position":"1100,1500","size":"100,100"}
+Your corpse will rot away and feed the trees of this squirrel haven for years to come.
+
+<img src="assets\greenpath\squirrel\ravenous_squirrel_dan_scott.png">
+
+YOU ARE DEAD
+
+
+:: squirrel_disrespect [green] {"position":"1225,1500","size":"100,100"}
+they swarm u, u got no chance
+
+[[continue|squirrel_dead]]
+
+
+:: squirrel_entry [green] {"position":"1700,2025","size":"100,100"}
+see squirrel envoy, seems like it's bowing?
+
+[[follow it|squirrel_haven]]
+
+
+:: squirrel_haven [green] {"position":"1575,1975","size":"100,100"}
+squirrel-topia
+
+some of them are gathering in one direction
+big magic in other direction
+
+[[see commotion|squirrel_lunch]]
+[[see magic|squirrel_lady]]
+
+
+:: squirrel_lady [green] {"position":"1400,1950","size":"100,100"}
+speaks some cryptic stuff
+
+[[steal|squirrel_lady_angry]]
+[[leave and check the commotion|squirrel_lunch]]
+
+
+:: squirrel_lady_angry [green] {"position":"1225,1850","size":"100,100"}
+squirrels attack
+
+how defend?
+
+
+
+
+:: squirrel_leader [green] {"position":"1400,1625","size":"100,100"}
+leader stops in front of you
+
+[[bow|squirrel_disrespect]]
+[[offer a nut|squirrel_reward]]
+
+
+:: squirrel_lunch [green] {"position":"1400,1800","size":"100,100"}
+nutty snack
+
+suddenly the squirrels stop in reverence
+
+their leader approaches
+
+[[watch and see|squirrel_leader]]
+
+
+:: squirrel_reward [green] {"position":"1075,1675","size":"100,100"}
+squirrel leader likes u and fetches u a gift
+
+woah thanks
+
+
+[[follow him|squirrel end]]
+
+
+:: start_blood [home] {"position":"3525,1425","size":"100,100"}
+*img and description
+
+[[Get ready to set off|crossroad]]
+
+<<run $inventory.push("blood")>>
+
+
+:: start_book [home] {"position":"3400,1425","size":"100,100"}
+*img and description
+
+[[Get ready to set off|crossroad]]
+
+<<run $inventory.push("start_book")>>
+
+
+:: start_club [home] {"position":"3475,1175","size":"100,100"}
+*img and description
+
+[[Place your weapon in your pack|starter_unique]]
+
+<<run $inventory.push("bad_club")>>
+
+
+:: start_dagger [home] {"position":"3600,1175","size":"100,100"}
+*img and description
+
+[[Place your weapon in your pack|starter_unique]]
+
+<<run $inventory.push("bad_dagger")>>
+
+
+
+:: start_jerky [home] {"position":"3275,1425","size":"100,100"}
+*img and description
+
+[[Get ready to set off|crossroad]]
+
+<<run $inventory.push("jerky")>>
+
+
+:: start_sling [home] {"position":"3350,1175","size":"100,100"}
+*img and description
+
+[[Place your weapon in your pack|starter_unique]]
+
+<<run $inventory.push("sling")>>
+
+
+:: starter_items [home] {"position":"3475,1050","size":"100,100"}
+"Grab something first", he ordered.
+
+You grab the rusty lantern in the pile, but you're also gonna need something to defend yourself with.
+
+<<set $choice = "">>
+
+You grab the: 
+[[Worn Dagger|start_dagger]]
+[[Light Club|start_club]]
+[[Slingshot|start_sling]]
+
+<<done>>
+<<switch $choice>>
+
+<<case "Worn dagger">>
+Dagger *img and description
+<<run $inventory.push("bad_dagger")>>
+
+<<case "Light club">>
+Club *img and description
+
+
+<<case "Slingshot">>
+Sling *img and description
+
+<</switch>>
+
+<</done>>
+
+
+:: starter_pack [home] {"position":"3475,925","size":"100,100"}
+You follow him to his shack away from town. 
+He grumbles, "The magic we need to fix this isn't in these parts, so get to it. Take whatever you need."
+He opens a case packed full of adventuring gear.
+
+<img src="assets\items\Supply-Drop-The-Brothers-War-MtG-Art.jpg">
+
+"Wait, what?! Why are you only telling us now?! Am I even the right person for the job, I mean I've never done anything with magic."
+
+"Go or don't go, doesn't matter to me"
+
+[["Fine, where do I need to go?"|starter_items]]
+
+
+:: starter_unique [home] {"position":"3475,1300","size":"100,100"}
+There are some random trinkets and tools that might be useful.
+
+You pack the: 
+[[Dried jerky|start_jerky]]
+[[Vial of blood|start_blood]]
+[[Dusty Book|start_book]]
+[[Small Pouch of Gold]]
+
+
+:: swamp_entry [black] {"position":"4000,1800","size":"100,100"}
+start wading through murky bog
+
+u hear a roar
+
+[[turn around|zombear]]
+
+
+:: swamptitan [black] {"position":"5600,1275","size":"100,100"}
+it's coming for you, too big to fight
+
+[[run|swamptitan_run]]
+[[stand still and hope he don't see u|swamptitan_escort]]
+
+
+:: swamptitan_escort [black] {"position":"5775,1300","size":"100,100"}
+drops you at cemetary and leaves
+
+[[works for me|grave]]
+
+
+:: swamptitan_run [black] {"position":"5775,1175","size":"100,100"}
+hit head on tree and caught anyway
+
+[[he carries you|swamptitan_escort]]
+
+
+:: titan_approach [green] {"position":"2575,1275","size":"100,100"}
+<img src="assets\greenpath\titan_clash\Titanoth-Rex-Ikoria-MtG-Art.jpg">
+
+A massive behemoth is coming to attack. The crystal giant stands up as the beast makes impact and the two clash.
+
+[[Help the crystal|titan_hurts]]
+[[Help the beast|titan_hurts]]
+[[Run|peaceful_glade]]
+
+
+:: titan_hurts [green] {"position":"2525,1125","size":"100,100"}
+Just coming close, you get kicked away like a bug.
+
+<<set $damage = 40 - $defense>>
+<<set $health = $health - $damage>>
+You take $damage damage.
+
+These creatures are beyond the scale of humans and there is no interfering with their bout.
+
+[[Attempt to help the crystal|titan_hurts]]
+[[Attempt to help the beast|titan_hurts]]
+[[Run and avoid getting caught in the battle|peaceful_glade]]
+
+
+:: turtle_give [green] {"position":"1800,2300","size":"100,100"}
+thanks, anyway
+
+moves over and shows another path
+
+[[keep to main path|wolf_spirit]]
+[[try new path|darkcore]]
+
+
+:: uphill/downhill [green] {"position":"2725,1700","size":"100,100"}
+The path forks up ahead.
+
+The uphill path seems to have crystal formations along the ground. 
+The downhill path goes down into a marshy zone. NOT READY YET
+
+[[Proceed uphill|crystals]]
+[[Go downhill|marsh]]
+
+
+:: upstairs_left [black] {"position":"4300,425","size":"100,100"}
+
+[[Return to the stairwell|mansion_upstairs]]
+[[go through the door ahead|upstairs_left_deadend]]
+<<if hasVisited("mansion_flip")>>
+[[go through door on the left|upstairs_library]]
+<</if>>
+
+
+:: upstairs_left_deadend [black] {"position":"4300,575","size":"100,100"}
+nothing here
+
+[[go back|upstairs_left]]
+
+
+:: upstairs_library [black] {"position":"4100,425","size":"100,100"}
+artifact on table
+
+be careful, taking this could put you in danger
+
+[[take it now|mansion_flip]]
+[[not yet, let's keep exploring|upstairs_left]]
+
+
+:: upstairs_right [black] {"position":"4300,200","size":"100,100"}
+the hallway here is long and with only doors at the end
+
+[[Return to the stairwell|mansion_upstairs]]
+[[Continue through the doorway|evil_mirror]]
+
+
+:: useful stuff {"position":"2800,900","size":"100,100"}
+HEALING
+You regain _ health.
+<<if $health < 100 - _>>
+	<<set $health=$health+_>>
+<<else>>
+	<<set $health=100>>
+<</if>>
+
+
+<<for _i to 0; _i lt $inventory.length; _i++>>  <<nobr>>
+	<<if $item_list[$inventory[_i]].type == "sharp" >>
+    
+    <</if>>
+    <</nobr>>
+<</for>>
+
+<<link `"Hit it with your " + $item_list[$inventory[_i]].name` "ooze_bash">>
+
+FIGHTS
+<<for _i to 0; _i lt $inventory.length; _i++>>  <<nobr>>
+	<<switch $item_list[$inventory[_i]].type>>
+    	<<case "sharp">>
+        	<<link `"Slash with your " + $item_list[$inventory[_i]].name` "bear_slash">>
+            <</link>>
+        <<case "blunt">>
+        	<<link `"Slash with your " + $item_list[$inventory[_i]].name` "bear_bash">>
+            <</link>>
+        <<case "ranged">>
+        	<<link `"Slash with your " + $item_list[$inventory[_i]].name` "bear_shoot">>
+            <</link>>
+        <<case "light">>
+        	<<link `"Scare it away with your " + $item_list[$inventory[_i]].name` "bear_light">>
+            <</link>>
+        <<case "defense">>
+        	<<link `"Block it with your " + $item_list[$inventory[_i]].name + " as you run away"` "bear_bash">>
+            <</link>>
+        <<case "special">>
+        	
+        <<default>>
+        	
+    <</switch>>
+    <</nobr>>
+<</for>>
+
+<</if>>
+
+DAMAGE
+
+*Describe damage
+
+<<for _i to 0; _i lt $inventory.length; _i++>>  <<nobr>>
+	<<if $item_list[$inventory[_i]].type == "sharp" >>
+    	<<set $damage = $item_list[$inventory[_i]].power * 4>>
+    <</if>>
+    <</nobr>>
+<</for>>
+
+<<set $enemy_health = $enemy_health - $damage>>
+Bear takes $damage damage. It now has $enemy_health health.
+<<set $damage = 15 + $defense>>
+<<set $health = $health - $damage>>
+You take $damage damage.
+
+<<if $enemy_health < 1>>
+	[[Continue|wolf_trapped]]
+<<else>>
+	[[Continue|bear_fight]]
+<</if>>
+
+GETTING ITEM
+<<nobr>>
+<<set $type_check = -1>>
+<<for _i to 0; _i lt $inventory.length; _i++>>  
+	<<if $item_list[$inventory[_i]].type == "sharp">>
+    	<<set $type_check = _i>>
+    <</if>>
+<</for>>
+
+<<if $type_check != -1>>
+	<<if $item_list[$inventory[$type_check]].power <= $item_list["_"].power>>
+    	Replaced the <<print $item_list[$inventory[$type_check]].name>> (Power: <<print $item_list[$inventory[$type_check]].power>>) with the $item_list["_"].name (Power: $item_list["_"].power).
+    	<<run $inventory.deleteAt($type_check)>>
+        <<run $inventory.push("_")>>
+        
+    <<else>>
+    	No need. Your $item_list[$inventory[$type_check]].name (Power: $item_list[$inventory[$type_check]].power) is better than the $item_list["_"].name (Power: $item_list["_"].power).
+    <</if>>
+<<else>>
+	You acquired the $item_list["_"].name (Power: $item_list["_"].power).
+    <<run $inventory.push("_")>>
+<</if>>
+<</nobr>>
+
+
+:: witch_agree [black] {"position":"5925,1850","size":"100,100"}
+"sure come rest, I was just gonna turn in for the night"
+
+[[rest for the night|witch_trapped]]
+[[wait until she's asleep and steal|witch_steal]]
+
+
+:: witch_alarm [black] {"position":"6325,1850","size":"100,100"}
+whose there
+
+[[risk taking the other item|witch_both]]
+
+
+
+:: witch_both [black] {"position":"6450,1800","size":"100,100"}
+get hurt
+
+[[run|witch_escape]]
+
+
+:: witch_escape [black] {"position":"6550,1975","size":"100,100"}
+follow her map/advice
+
+[[follow directions|grave]]
+
+
+:: witch_house [black] {"position":"5625,1900","size":"100,100"}
+at front door
+
+[[knock|witch_knock]]
+[[go in|witch_uninvited]]
+
+
+:: witch_knock [black] {"position":"5775,1950","size":"100,100"}
+"oh hello there, what're u doing out here"
+
+[[im in trouble can I rest|witch_agree]]
+[[gimme directions|witch_leads]]
+
+
+:: witch_leads [black] {"position":"5925,1975","size":"100,100"}
+oh sure, i'll tell u where to go, but why don't you rest here for the night
+
+[[yes|witch_trapped]]
+[[no, just tell me where|witch_misleads]]
+
+
+:: witch_leave [black] {"position":"5925,1725","size":"100,100"}
+not sure where to go but leaves
+
+[[continue|killer_arrives]]
+
+
+:: witch_misleads [black] {"position":"6350,2150","size":"100,100"}
+head to cemetary, but it seems like she's laughing about it
+
+[[follow the path she showed you|mint_monster]]
+
+
+:: witch_steal [black] {"position":"6050,1800","size":"100,100"}
+what grab
+
+[[this|item1]]
+[[that|item2]]
+
+
+:: witch_struggle [black] {"position":"6250,2000","size":"100,100"}
+get hurt before out of the ropes
+
+[[run now|witch_escape]]
+
+
+:: witch_trapped [black] {"position":"6050,1925","size":"100,100"}
+u wake up hands tied while she in other room cooking
+
+<<for _i to 0; _i lt $inventory.length; _i++>>  <<nobr>>
+	<<switch $item_list[$inventory[_i]].type>>
+    	<<case "sharp">>
+        	[[cut urself out if have sharp|witch_escape]]
+        <<case "blunt">>
+        	
+        <<case "ranged">>
+        	
+        <<case "special">>
+        	
+        <<default>>
+        	[[struggle|witch_struggle]]
+    <</switch>>
+    <</nobr>>
+<</for>>
+
+
+
+
+
+:: witch_uninvited [black] {"position":"5775,1825","size":"100,100"}
+"how read to come barging in like that"
+
+[[sorry my bad I'll go|witch_leave]]
+[[sorry but can I rest here|witch_agree]]
+
+
+:: wolf_bash [green] {"position":"875,375","size":"100,100"}
+*Describe damage, worse than slash
+
+<<for _i to 0; _i lt $inventory.length; _i++>>  <<nobr>>
+	<<if $item_list[$inventory[_i]].type == "blunt" >>
+    	<<set $damage = $item_list[$inventory[_i]].power * 4>>
+    <</if>>
+    <</nobr>>
+<</for>>
+
+<<set $enemy_health = $enemy_health - $damage>>
+The wolf takes $damage damage. It now has $enemy_health health.
+<<set $damage = 14 + $defense>>
+<<set $health = $health - $damage>>
+You take $damage damage.
+
+<<if $enemy_health < 1>>
+	[[Continue|festival_entry]]
+<<else>>
+	[[Continue|wolf_fight]]
+<</if>>
+
+
+:: wolf_fight [green] {"position":"1050,275","size":"100,100"}
+The wolf is still kicking, and it's closed in on you. It's too cose to run away from or shoot now. What will you do?
+
+The cat has $enemy_health health.
+<<for _i to 0; _i lt $inventory.length; _i++>>  <<nobr>>
+	<<switch $item_list[$inventory[_i]].type>>
+    	<<case "sharp">>
+        	<<link `"Stab with your " + $item_list[$inventory[_i]].name` "wolf_slash">>
+            <</link>>
+        <<case "blunt">>
+        	<<link `"Bash it with your " + $item_list[$inventory[_i]].name` "wolf_bash">>
+            <</link>>
+        <<case "special">>
+        	
+    <</switch>>
+    <</nobr>>
+<</for>>
+
+<<if false>>
+[[wolf_slash]]
+[[wolf_bash]]
+<</if>>
+
+
+:: wolf_light [green] {"position":"875,625","size":"100,100"}
+Good idea, animals are scared of fire after all.
+
+<<for _i to 0; _i lt $inventory.length; _i++>>  <<nobr>>
+	<<if $item_list[$inventory[_i]].type == "ranged" >>
+    	<<set $damage = $item_list[$inventory[_i]].power>>
+    <</if>>
+    <</nobr>>
+<</for>>
+
+<<if $damage < 3>>
+	Looks like the fires weren't strong enough to scare it away.
+    It lightly scratches you. <<set $health = $health - 4>>
+    You take 4 damage.
+    [[Continue|wolf_fight]] 
+<<else>>
+	The flames were strong enough to scare it away.
+    [[Continue|festival_entry]] 
+<</if>>
+
+
+:: wolf_run [green] {"position":"875,750","size":"100,100"}
+You scramble to get up the nearest tree as quick as you can. This rapid movement seems to trigger the wolf's attack, as it pounces at you with claws and fangs.
+
+<<set $damage = 33 - $defense>>
+You take $damage damage, but you manage to make it safely up the tree.
+
+[[continue|festival_entry]]
+
+
+:: wolf_shoot [green] {"position":"875,500","size":"100,100"}
+*Describe damage, attacking at ranged before it can get to you
+
+<<for _i to 0; _i lt $inventory.length; _i++>>  <<nobr>>
+	<<if $item_list[$inventory[_i]].type == "ranged" >>
+    	<<set $damage = $item_list[$inventory[_i]].power * 5>>
+    <</if>>
+    <</nobr>>
+<</for>>
+
+<<set $enemy_health = $enemy_health - $damage>>
+The wolf takes $damage damage. It now has $enemy_health health.
+<<set $damage = 14 + $defense>>
+
+<<if $enemy_health < 1>>
+	[[Continue|festival_entry]]
+<<else>>
+	[[Continue|wolf_fight]]
+<</if>>
+
+
+:: wolf_slash [green] {"position":"875,250","size":"100,100"}
+*Describe damage
+
+<<for _i to 0; _i lt $inventory.length; _i++>>  <<nobr>>
+	<<if $item_list[$inventory[_i]].type == "sharp" >>
+    	<<set $damage = $item_list[$inventory[_i]].power * 6>>
+    <</if>>
+    <</nobr>>
+<</for>>
+
+<<set $enemy_health = $enemy_health - $damage>>
+The wolf takes $damage damage. It now has $enemy_health health.
+<<set $damage = 14 + $defense>>
+<<set $health = $health - $damage>>
+You take $damage damage.
+
+<<if $enemy_health < 1>>
+	[[Continue|festival_entry]]
+<<else>>
+	[[Continue|wolf_fight]]
+<</if>>
+
+
+:: wolf_spirit [green] {"position":"1375,2300","size":"100,100"}
+green wolf spirit as if beckoning you
+
+[[ignore, don't trust|elf_entry]]
+[[follow him|forest_god]]
+
+
+:: wolf_trapped [green] {"position":"1375,1100","size":"100,100"}
+Along your path, you find a wolf caught in a trap. It's howling in pain.
+
+<<if $forest_night is false>>
+	[[Help it|wolftrap_day]]
+<<else>>
+	[[Help it|wolftrap_night]]
+<</if>>
+[[Leave it|wolfpath_pick]]
+
+
+:: wolfpath_pick [green] {"position":"1025,1000","size":"100,100"}
+You reach the opening a of a cave.
+
+<img src = "assets\greenpath\terrain\Sunken-Hollow-Expedition-Battle-for-Zendikar-MtG-Art.jpg">
+
+You can see bones and corpses screwn across the cave floor, but inside you can sense a great magic. It could be the artifact you are looking for.
+
+[[Enter the cavern|green_spider]]
+[[Continue through the thicket|hungry_wolf]]
+
+
+:: wolftrap_day [green] {"position":"1225,825","size":"100,100"}
+As you're reaching out to help the wolf, you hear leaves rustling behind you.
+
+From behind the shrubbery, a voice calls, "Be careful there, that fella's hurt and could bite you while its panicking"
+
+A huntress comes out of the greenery, "Let me help you with that."
+
+<img src = "assets\greenpath\daynight\trapmaster\Outland-Liberator-Innistrad-Midnight-Hunt-MtG-Art.jpg">
+
+"Thanks for helping my friend here, take this." she says as she hands you a 
+
+GIVE AN ITEM HERE
+
+[[onward|wolfpath_pick]]
+
+
+:: wolftrap_night [green] {"position":"1225,950","size":"100,100"}
+As you're reaching out to help the wolf, you hear leaves rustling behind you. Before you can react, a wolf charges out from the shrubbery. You duck away as it bounds over to the trapped wolf and breaks its cage apart.
+
+<img src = "assets\greenpath\daynight\trapmaster\Frenzied-Trapbreaker-Innistrad-Midnight-Hunt-MtG-Art.jpg">
+
+It look at you and gives a threatening snarl before running off into the night. It must not have considered you a threat. Or maybe it just wasn't hungry.
+
+[[Onward|wolfpath_pick]]
+
+
+:: woods [green] {"position":"3125,1700","size":"100,100"}
+Hiking through the forest, you've seen deer, squirrels and insects. Fortunately, nothing seems to consider you prey just yet.
+
+<img src="assets\greenpath\terrain\Forest-Art-Theros.jpg">
+
+[[Continue|ooze]]
+
+
+:: woods_entry [black] {"position":"4000,1675","size":"100,100"}
+fog rolls in
+
+[[see someting in the fog|woods_horror]]
+
+
+:: woods_horror [black] {"position":"4125,1600","size":"100,100"}
+otherworldly reaper
+
+it's coming for you what to do?
+
+<<for _i to 0; _i lt $inventory.length; _i++>>  <<nobr>>
+	<<switch $item_list[$inventory[_i]].type>>
+    	<<case "sharp">>
+        	[[slash|horror_immune]]
+        <<case "blunt">>
+        	[[blunt|horror_immune]]
+        <<case "ranged">>
+        	[[ranged|horror_immune]]
+        <<case "light">>
+        	
+        <<case "defense">>
+        	
+        <<case "special">>
+        	
+        <<default>>
+        	[[run|horror_run]]
+    <</switch>>
+    <</nobr>>
+<</for>>
+
+
+:: zombear [black] {"position":"4150,1875","size":"100,100"}
+it comes at u
+
+<<for _i to 0; _i lt $inventory.length; _i++>>  <<nobr>>
+	<<switch $item_list[$inventory[_i]].type>>
+    	<<case "sharp">>
+        	[[slash|zombear_slash]]
+        <<case "blunt">>
+        	[[bash|zombear_bash]]
+        <<case "ranged">>
+        	[[shoot|zombear_shoot]]
+        <<case "light">>
+        	[[scare it|zombear_light]]
+        <<case "special">>
+        	
+        <<default>>
+        	[[run|zombear|zombear_run]]
+    <</switch>>
+    <</nobr>>
+<</for>>
+
+
+
+
+:: zombear_bash [black] {"position":"4275,2000","size":"100,100"}
+hurts it but keeps going
+
+[[uh oh|zombear_near]]
+
+if strong enough bash skull in and kill it
+
+[[loot the corpse it was eating|zombear_loot]]
+
+
+:: zombear_dead [dead black] {"position":"3925,2200","size":"100,100"}
+
+
+
+:: zombear_light [black] {"position":"3900,2000","size":"100,100"}
+this isn't like a living animal, not scared
+
+[[uh oh|zombear_near]]
+
+
+:: zombear_loot [black] {"position":"4250,2200","size":"100,100"}
+grab something
+
+[[continue|chapel]]
+
+
+:: zombear_near [black] {"position":"4050,2200","size":"100,100"}
+it's just a moving corpse, so normal damage won't kill it
+
+[[keep_attacking|zombear_dead]]
+[[run|zombear_run]]
+
+
+:: zombear_run [black] {"position":"4400,2025","size":"100,100"}
+zombies not as fast, but take a lot more to kill
+
+u get away
+
+[[continue|chapel]]
+
+
+:: zombear_shoot [black] {"position":"4025,2000","size":"100,100"}
+slows it down but keeps going
+
+[[zombear|zombear_near]]
+
+if strong enough kill it
+
+[[loot the corpse it was eating|zombear_loot]]
+
+
+:: zombear_slash [black] {"position":"4150,2000","size":"100,100"}
+hurts it but keeps going
+
+[[uh oh|zombear_near]]
+
+if strong enough cut off a leg and leave it immobile 
+
+[[loot the corpse it was eating|zombear_loot]]
+
+
+:: StoryStylesheet [stylesheet]
+/* Style the entire body when showing passage tagged with grey */
+html {
+	margin: 0 auto; 
+	font-family: Georgia;
+  	font-size: 20px;
+}
+
+body.home {
+  background: #5D5D5D;
+}
+
+body.red {
+  background: #4A150A;
+}
+
+body.blue {
+  background: #152E50;
+}
+
+body.black {
+  background: black;
+}
+
+body.green {
+  background: #062C0F;
+}
+
+html.dead {
+	color: black;
+
+}
+
+body.dead {
+	background: #FF4C4C;
+  	color: black;
+}
+
+img {
+  width: 90%;
+  height: 90%;
+}
+
+img[data-passage="icon"] {
+  width: 16px;
+  height: 16px;
+}
