@@ -1,0 +1,47 @@
+<<set $item_list = {
+	"_": {
+    	name: "_",
+        type: "_",
+        power: 0,
+    }, 
+	"bad_dagger": {
+    	name: "Worn Dagger",
+        type: "sharp",
+        power: 1,
+    },
+    "bad_club": {
+    	name: "Light Club",
+        type: "blunt",
+        power: 1,
+    },
+    "bad_spear":{
+    	name: "Old Spear",
+        type: "long",
+        power: 1,
+    },
+    "sling": {
+    	name: "Slingshot",
+        type: "ranged",
+        power: 1,
+    },
+    "bad_lantern": {
+    	name: "Rusty Lantern",
+        type: "light",
+        power: 1,
+    },
+	"jerky": {
+    	name: "Dried Jerky",
+        type: "quest",
+        power: 0,
+    },
+	"blood": {
+    	name: "Vial of Blood",
+        type: "quest",
+        power: 0,
+    }, 
+    "start_book": {
+    	name: "Dusty Book",
+        type: "quest",
+        power: 1,
+    },
+}>>
